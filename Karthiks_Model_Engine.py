@@ -30,7 +30,6 @@ z=pd.read_hdf('onedata.h5','StudentsPerformance')
 aa=pd.read_hdf('onedata.h5','tips1')
 bb=pd.read_hdf('onedata.h5','PostsForAnalysis1')
 cc=pd.read_hdf('onedata.h5','Air_Traffic_Passenger_Statistics1')
-#dd=pd.read_hdf('onedata.h5','')
 do = {'DATASET': [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,aa,bb,cc],
       'TARGET CLASS': [a['First Tooltip'],b['Value_of_Property_Stolen'],c['Number'],d['Victims_of_Rape_Total'],
                       e['TARGET CLASS'],f['looks'],g['First Tooltip'],h['First Tooltip'],
