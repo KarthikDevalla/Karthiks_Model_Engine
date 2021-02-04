@@ -1,3 +1,4 @@
+#This lines raed the datasets from onedata.h5 file in order to make into a dataframe for traning and prediction.
 import pandas as pd
 import warnings
 warnings.filterwarnings('ignore')
@@ -30,6 +31,7 @@ z=pd.read_hdf('onedata.h5','StudentsPerformance')
 aa=pd.read_hdf('onedata.h5','tips1')
 bb=pd.read_hdf('onedata.h5','PostsForAnalysis1')
 cc=pd.read_hdf('onedata.h5','Air_Traffic_Passenger_Statistics1')
+# The data is stored into a dataframe with their respective Machine Learning algorithm(MLA) class.
 do = {'DATASET': [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,aa,bb,cc],
       'TARGET CLASS': [a['First Tooltip'],b['Value_of_Property_Stolen'],c['Number'],d['Victims_of_Rape_Total'],
                       e['TARGET CLASS'],f['looks'],g['First Tooltip'],h['First Tooltip'],
@@ -40,6 +42,7 @@ do = {'DATASET': [a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,aa,bb,cc],
                       ,v['won'],w['signs_of_mental_illness'],x['total_votes'],y['lot'],z['writing score'],aa['Result'],bb['time_of_day'],cc['GEO Summary']],'MLA':['REG','REG','REG','REG','REG','CLA','REG','REG','REG','CLA','CLA','REG','REG',
                                           'REG','REG','CLA','REG','CLA','CLA','CLA','CLA','CLA','CLA','REG','REG','REG','CLA','CLA','CLA']}
 do=pd.DataFrame(do)
+#Loading into the Machine learning model SVM
 import numpy as np
 x0 = []
 for i in range(len(do.index)):
@@ -47,19 +50,23 @@ for i in range(len(do.index)):
 y0=np.asarray(do['MLA'])
 from sklearn.model_selection import train_test_split
 X0_train,X0_test,y0_train,y0_test=train_test_split(x0,y0,test_size=0.2,random_state=3,shuffle=True)
+#The data loaded is of 1000 values both in traning set and testing set.
 for tr in range(len(X0_train)):
     X0_train[tr]=X0_train[tr][:1000]
 for ts in range(len(X0_test)):
     X0_test[ts]=X0_test[ts][:1000]
+# SVM is used to predict the type of Machine learning algorithm to be used.
 from sklearn import svm
 dfg=svm.SVC(kernel='linear')
 dfg.fit(X0_train,y0_train)
 pred_y=dfg.predict(X0_test)
 #print(pred_y)
 from sklearn import metrics
+# The model's accuracy after prediction. '\033[1m' is added to get a bold style format to the statement it's printing.
 print('\033[1m'+"Engine's Accuracy before loading data:",metrics.accuracy_score(y0_test,pred_y)*100,'%')
 print('\033[1m'+'ENGINE READY!!')
 total_accuracy=[]
+# Various Classification Machine Learning models.
 def SVM():
     import numpy as np
     import pandas as pd
@@ -279,7 +286,7 @@ def classification():
     DecisionTreeClassifier()
     RandomForestClassifier()
     XGBoostClassifier()
-
+# Various Regression Machine Learning Models.
 def PolyReg():
     import numpy as np
     import pandas as pd
@@ -459,9 +466,11 @@ def regression():
         RandomForestRegressor()
         DecisionTreeRegressor()
         XGBoostRegressor()
+# Input from the user to load the dataset.
 import pandas as pd
 w1=input('\033[1m'+"Please enter the name of the dataset or the path(Please make sure that the dataset has 1000 or above rows:)")
 load_dataset=pd.read_excel('{}.xlsx'.format(w1))
+# Cleaning rows with NaN values.
 if load_dataset.isnull().values.any()==False:
     pass
 if load_dataset.isnull().values.any()==True:
@@ -469,6 +478,7 @@ if load_dataset.isnull().values.any()==True:
     load_dataset.dropna(subset =dropped_values , inplace=True)
     load_dataset.reset_index(drop=True, inplace=True)
 print(load_dataset.head(5))
+# Input from the user to assign Independent and dependent variables looking at the above printed dataset. 
 indep=input('\033[1m'+"Enter the Independent values:")
 features=indep.split(',')
 De=input('\033[1m'+"Enter the Dependent values:")
@@ -476,12 +486,15 @@ dep=De.split(',')
 print('\033[1m'+'........Go chill while we make things happen...........')
 for target in dep:
     test=load_dataset["{}".format(target)][:1000]
+#Label encodiig the target class to avoid error while prediction.
     from sklearn.preprocessing import LabelEncoder
     Le=LabelEncoder()
     test=Le.fit_transform(test)
+#Prediction of new data given by the user.
 predico=dfg.predict([test])
 predico=list(predico)
 print('\033[1m'+"Engine's prediction after loading data:",predico)
+# Process done depending upon the predicted output.
 if predico==['CLA']:
     print('\033[1m'+"The engine is using Classification for prediction:")
     classification()
