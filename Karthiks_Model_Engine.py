@@ -1,4 +1,4 @@
-#This lines raed the datasets from onedata.h5 file in order to make into a dataframe for traning and prediction.
+#These lines read the datasets from onedata.h5 file in order to make into a dataframe for traning and prediction.
 import pandas as pd
 import warnings
 warnings.filterwarnings('ignore')
@@ -486,7 +486,7 @@ dep=De.split(',')
 print('\033[1m'+'........Go chill while we make things happen...........')
 for target in dep:
     test=load_dataset["{}".format(target)][:1000]
-#Label encodiig the target class to avoid error while prediction.
+#Label encoding the target class to avoid errors while prediction.
     from sklearn.preprocessing import LabelEncoder
     Le=LabelEncoder()
     test=Le.fit_transform(test)
