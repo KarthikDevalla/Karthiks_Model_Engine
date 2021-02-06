@@ -278,6 +278,61 @@ def XGBoostClassifier():
     total_accuracy.append(metrics.accuracy_score(y6_test,pip6.predict(X6_test))*100)
     import warnings
     warnings.filterwarnings('ignore')
+def GaussianNB():
+    from sklearn.compose import ColumnTransformer
+    from sklearn.pipeline import Pipeline
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import OneHotEncoder
+    import pandas as pd
+    import numpy as np
+    X12=load_dataset[features]
+    y12=load_dataset[dep]
+    from sklearn.model_selection import train_test_split
+    X12_train,X12_test,y12_train,y12_test=train_test_split(X12,y12,test_size=0.2,random_state=4)
+    numerical_transformer12 = SimpleImputer(strategy='constant')
+    categorical_transformer12 = Pipeline(steps=[('imputer12', SimpleImputer(strategy='most_frequent')),('onehot12', OneHotEncoder(handle_unknown='ignore'))])
+    categorical_cols12 = [col12 for col12 in X12_train.columns if X12_train[col12].dtype == "object"]
+
+    numerical_cols12 = [col12 for col12 in X12_train.columns if X12_train[col12].dtype in ['int64', 'float64']]
+    preprocessor12 = ColumnTransformer(transformers=[('num12', numerical_transformer12, numerical_cols12),('cat12', categorical_transformer12, categorical_cols12)])
+    from sklearn.naive_bayes import GaussianNB
+    model12=GaussianNB()
+    pip12 = Pipeline(steps=[('preprocessor9', preprocessor12),('model12', model12)])
+    pip12.fit(X12_train, y12_train)
+    preds9 = pip12.predict(X12_test)
+    #print(preds9)
+    from sklearn import metrics
+    print("The Accuracy of GaussianNB Classifier is:", metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100,'%')
+    import warnings
+    warnings.filterwarnings('ignore')
+    
+def SGD():    
+    from sklearn.compose import ColumnTransformer
+    from sklearn.pipeline import Pipeline
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import OneHotEncoder
+    import pandas as pd
+    import numpy as np
+    X13=load_dataset[features]
+    y13=load_dataset[dep]
+    from sklearn.model_selection import train_test_split
+    X13_train,X13_test,y13_train,y13_test=train_test_split(X13,y13,test_size=0.2,random_state=4)
+    numerical_transformer13 = SimpleImputer(strategy='constant')
+    categorical_transformer13 = Pipeline(steps=[('imputer13', SimpleImputer(strategy='most_frequent')),('onehot13', OneHotEncoder(handle_unknown='ignore'))])
+    categorical_cols13 = [col13 for col13 in X13_train.columns if X13_train[col13].dtype == "object"]
+
+    numerical_cols13 = [col13 for col13 in X13_train.columns if X13_train[col13].dtype in ['int64', 'float64']]
+    preprocessor13 = ColumnTransformer(transformers=[('num13', numerical_transformer13, numerical_cols13),('cat13', categorical_transformer13, categorical_cols13)])
+    from sklearn.linear_model import SGDClassifier
+    model13=SGDClassifier(loss='hinge',shuffle=True,random_state=4)
+    pip13 = Pipeline(steps=[('preprocessor13', preprocessor13),('model13', model13)])
+    pip13.fit(X13_train, y13_train)
+    preds10 = pip13.predict(X13_test)
+    #print(preds10)
+    from sklearn import metrics
+    print("The Accuracy of SGD Classifier is:", metrics.accuracy_score(y13_test,pip13.predict(X13_test))*100,'%')
+    import warnings
+    warnings.filterwarnings("ignore")
     
 def classification():
     SVM()
@@ -286,6 +341,8 @@ def classification():
     DecisionTreeClassifier()
     RandomForestClassifier()
     XGBoostClassifier()
+    GaussianNB()
+    SGD()
 # Various Regression Machine Learning Models.
 def PolyReg():
     import numpy as np
