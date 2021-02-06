@@ -305,7 +305,7 @@ def GaussianNB():
     print("The Accuracy of GaussianNB Classifier is:", metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100,'%')
     import warnings
     warnings.filterwarnings('ignore')
-    
+    total_accuracy.append(metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100,'%')
 def SGD():    
     from sklearn.compose import ColumnTransformer
     from sklearn.pipeline import Pipeline
@@ -333,6 +333,7 @@ def SGD():
     print("The Accuracy of SGD Classifier is:", metrics.accuracy_score(y13_test,pip13.predict(X13_test))*100,'%')
     import warnings
     warnings.filterwarnings("ignore")
+    total_accuracy.append(metrics.accuracy_score(y13_test,pip13.predict(X13_test))*100,'%')
     
 def classification():
     SVM()
