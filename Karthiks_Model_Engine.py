@@ -278,34 +278,6 @@ def XGBoostClassifier():
     total_accuracy.append(metrics.accuracy_score(y6_test,pip6.predict(X6_test))*100)
     import warnings
     warnings.filterwarnings('ignore')
-def GaussianNB():
-    from sklearn.compose import ColumnTransformer
-    from sklearn.pipeline import Pipeline
-    from sklearn.impute import SimpleImputer
-    from sklearn.preprocessing import OneHotEncoder
-    import pandas as pd
-    import numpy as np
-    X12=load_dataset[features]
-    y12=load_dataset[dep]
-    from sklearn.model_selection import train_test_split
-    X12_train,X12_test,y12_train,y12_test=train_test_split(X12,y12,test_size=0.2,random_state=4)
-    numerical_transformer12 = SimpleImputer(strategy='constant')
-    categorical_transformer12 = Pipeline(steps=[('imputer12', SimpleImputer(strategy='most_frequent')),('onehot12', OneHotEncoder(handle_unknown='ignore'))])
-    categorical_cols12 = [col12 for col12 in X12_train.columns if X12_train[col12].dtype == "object"]
-
-    numerical_cols12 = [col12 for col12 in X12_train.columns if X12_train[col12].dtype in ['int64', 'float64']]
-    preprocessor12 = ColumnTransformer(transformers=[('num12', numerical_transformer12, numerical_cols12),('cat12', categorical_transformer12, categorical_cols12)])
-    from sklearn.naive_bayes import GaussianNB
-    model12=GaussianNB()
-    pip12 = Pipeline(steps=[('preprocessor9', preprocessor12),('model12', model12)])
-    pip12.fit(X12_train, y12_train)
-    preds9 = pip12.predict(X12_test)
-    #print(preds9)
-    from sklearn import metrics
-    print("The Accuracy of GaussianNB Classifier is:", metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100,'%')
-    import warnings
-    warnings.filterwarnings('ignore')
-    total_accuracy.append(metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100)
       
 def SGD():    
     from sklearn.compose import ColumnTransformer
@@ -376,7 +348,6 @@ def classification():
     DecisionTreeClassifier()
     RandomForestClassifier()
     XGBoostClassifier()
-    GaussianNB()
     SGD()
     GradientBoostingClassifier()
 # Various Regression Machine Learning Models.
@@ -578,6 +549,41 @@ def SGDRegressor():
     total_accuracy.append(max(acc1)*100)
     import warnings
     warnings.filterwarnings("ignore")
+def GradientBoostingRegressor():
+    from sklearn.compose import ColumnTransformer
+    from sklearn.pipeline import Pipeline
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import OneHotEncoder
+    import pandas as pd
+    import numpy as np
+    load_dataset=pd.read_excel('insurance.xlsx')
+    features=['age','bmi','smoker','children']
+    X12=load_dataset[features]
+    dep=['charges']
+    y12=load_dataset[dep]
+    from sklearn.model_selection import train_test_split
+    X12_train,X12_test,y12_train,y12_test=train_test_split(X12,y12,test_size=0.2,random_state=4)
+    numerical_transformer12 = SimpleImputer(strategy='constant')
+    categorical_transformer12 = Pipeline(steps=[('imputer12', SimpleImputer(strategy='most_frequent')),('onehot12', OneHotEncoder(handle_unknown='ignore'))])
+    categorical_cols12 = [col12 for col12 in X12_train.columns if X12_train[col12].dtype == "object"]
+    numerical_cols12 = [col12 for col12 in X12_train.columns if X12_train[col12].dtype in ['int64', 'float64']]
+    preprocessor12 = ColumnTransformer(transformers=[('num12', numerical_transformer12, numerical_cols12),('cat12', categorical_transformer12, categorical_cols12)])
+    from sklearn.ensemble import GradientBoostingRegressor
+    acc2=[]
+    loss2=['huber','quantile']
+    for los1 in loss2:
+        model12=GradientBoostingRegressor(loss='{}'.format(los1),n_estimators=500,learning_rate=0.01,random_state=4)
+        pip12 = Pipeline(steps=[('preprocessor9', preprocessor12),('model12', model12)])
+        pip12.fit(X12_train, y12_train)
+        preds9 = pip12.predict(X12_test)
+        #print(preds9)
+        from sklearn.metrics import r2_score
+        acc2.append(r2_score(y12_test,pip12.predict(X12_test)))
+    print('The accuracy of Gradient Boosting Regressor:',max(acc2)*100,'%')
+    import warnings
+    warnings.filterwarnings('ignore')
+    total_accuracy.append(max(acc2)*100)
+
     
 def regression():
     if len(features)==1:
@@ -587,12 +593,14 @@ def regression():
         DecisionTreeRegressor()
         XGBoostRegressor()
         SGDRegressor()
+        GradientBoostingRegressor()
     else:
         MulReg()
         RandomForestRegressor()
         DecisionTreeRegressor()
         XGBoostRegressor()
         SGDRegressor()
+        GradientBoostingRegressor()
 # Input from the user to load the dataset.
 import pandas as pd
 w1=input('\033[1m'+"Please enter the name of the dataset or the path(Please make sure that the dataset has 1000 or above rows:)")
