@@ -306,6 +306,7 @@ def GaussianNB():
     import warnings
     warnings.filterwarnings('ignore')
     total_accuracy.append(metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100)
+      
 def SGD():    
     from sklearn.compose import ColumnTransformer
     from sklearn.pipeline import Pipeline
@@ -339,6 +340,34 @@ def SGD():
     import warnings
     warnings.filterwarnings('ignore')
     total_accuracy.append(max(acc)*100,'%')
+      
+def GradientBoostingClassifier():
+    from sklearn.compose import ColumnTransformer
+    from sklearn.pipeline import Pipeline
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import OneHotEncoder
+    import pandas as pd
+    import numpy as np
+    X14=load_dataset[features]
+    y14=load_dataset[dep]
+    from sklearn.model_selection import train_test_split
+    X14_train,X14_test,y14_train,y14_test=train_test_split(X14,y14,test_size=0.2,random_state=4)
+    numerical_transformer14 = SimpleImputer(strategy='constant')
+    categorical_transformer14 = Pipeline(steps=[('imputer14', SimpleImputer(strategy='most_frequent')),('onehot14', OneHotEncoder(handle_unknown='ignore'))])
+    categorical_cols14 = [col14 for col14 in X14_train.columns if X14_train[col14].dtype == "object"]
+    numerical_cols14 = [col14 for col14 in X14_train.columns if X14_train[col14].dtype in ['int64', 'float64']]
+    preprocessor14 = ColumnTransformer(transformers=[('num14', numerical_transformer14, numerical_cols14),('cat14', categorical_transformer14, categorical_cols14)])
+    from sklearn.ensemble import GradientBoostingClassifier
+    model14 = GradientBoostingClassifier(n_estimators=100, learning_rate=0.01,max_depth=4, random_state=66)
+    pip14 = Pipeline(steps=[('preprocessor14', preprocessor14),('model14', model14)])
+    pip14.fit(X14_train, y14_train)
+    preds11 = pip14.predict(X14_test)
+    #print(preds11)
+    from sklearn import metrics
+    print("The Accuracy of Gradient Boosting Classifier:",metrics.accuracy_score(y14_test,pip14.predict(X14_test))*100,'%')
+    import warnings
+    warnings.filterwarnings("ignore")
+    total_accuracy.append(metrics.accuracy_score(y14_test,pip14.predict(X14_test))*100)
     
 def classification():
     SVM()
@@ -349,6 +378,7 @@ def classification():
     XGBoostClassifier()
     GaussianNB()
     SGD()
+    GradientBoostingClassifier()
 # Various Regression Machine Learning Models.
 def PolyReg():
     import numpy as np
@@ -516,6 +546,38 @@ def XGBoostRegressor():
     total_accuracy.append(r2_score(y11_test,preds8)*100)
     import warnings
     warnings.filterwarnings('ignore')
+
+def SGDRegressor():
+    from sklearn.compose import ColumnTransformer
+    from sklearn.pipeline import Pipeline
+    from sklearn.impute import SimpleImputer
+    from sklearn.preprocessing import OneHotEncoder
+    import pandas as pd
+    import numpy as np
+    X15=load_dataset[features]
+    y15=load_dataset[dep]
+    from sklearn.model_selection import train_test_split
+    X15_train,X15_test,y15_train,y15_test=train_test_split(X15,y15,test_size=0.2,random_state=4)
+    numerical_transformer15 = SimpleImputer(strategy='constant')
+    categorical_transformer15 = Pipeline(steps=[('imputer15', SimpleImputer(strategy='most_frequent')),('onehot15', OneHotEncoder(handle_unknown='ignore'))])
+    categorical_cols15 = [col15 for col15 in X15_train.columns if X15_train[col15].dtype == "object"]
+    numerical_cols15 = [col15 for col15 in X15_train.columns if X15_train[col15].dtype in ['int64', 'float64']]
+    preprocessor15 = ColumnTransformer(transformers=[('num15', numerical_transformer15, numerical_cols15),('cat15', categorical_transformer15, categorical_cols15)])
+    acc1=[]
+    loss1=['squared_loss','huber','epsilon_insensitive','squared_epsilon_insensitive']
+    for los1 in loss1:
+        from sklearn.linear_model import SGDRegressor
+        model15=SGDRegressor(loss='{}'.format(los1),shuffle=True,random_state=4)
+        pip15 = Pipeline(steps=[('preprocessor15', preprocessor15),('model15', model15)])
+        pip15.fit(X15_train, y15_train)
+        preds12 = pip15.predict(X15_test)
+        #print(preds12)
+        from sklearn.metrics import r2_score
+        acc1.append(r2_score(y15_test,preds12))
+    print("The Accuracy of SGD Regression:",max(acc1)*100,'%')
+    total_accuracy.append(max(acc1)*100)
+    import warnings
+    warnings.filterwarnings("ignore")
     
 def regression():
     if len(features)==1:
@@ -524,11 +586,13 @@ def regression():
         RandomForestRegressor()
         DecisionTreeRegressor()
         XGBoostRegressor()
+        SGDRegressor()
     else:
         MulReg()
         RandomForestRegressor()
         DecisionTreeRegressor()
         XGBoostRegressor()
+        SGDRegressor()
 # Input from the user to load the dataset.
 import pandas as pd
 w1=input('\033[1m'+"Please enter the name of the dataset or the path(Please make sure that the dataset has 1000 or above rows:)")
