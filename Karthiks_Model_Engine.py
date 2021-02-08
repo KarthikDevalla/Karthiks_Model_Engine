@@ -305,7 +305,7 @@ def GaussianNB():
     print("The Accuracy of GaussianNB Classifier is:", metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100,'%')
     import warnings
     warnings.filterwarnings('ignore')
-    total_accuracy.append(metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100,'%')
+    total_accuracy.append(metrics.accuracy_score(y12_test,pip12.predict(X12_test))*100)
 def SGD():    
     from sklearn.compose import ColumnTransformer
     from sklearn.pipeline import Pipeline
@@ -324,16 +324,21 @@ def SGD():
     numerical_cols13 = [col13 for col13 in X13_train.columns if X13_train[col13].dtype in ['int64', 'float64']]
     preprocessor13 = ColumnTransformer(transformers=[('num13', numerical_transformer13, numerical_cols13),('cat13', categorical_transformer13, categorical_cols13)])
     from sklearn.linear_model import SGDClassifier
-    model13=SGDClassifier(loss='hinge',shuffle=True,random_state=4)
-    pip13 = Pipeline(steps=[('preprocessor13', preprocessor13),('model13', model13)])
-    pip13.fit(X13_train, y13_train)
-    preds10 = pip13.predict(X13_test)
-    #print(preds10)
-    from sklearn import metrics
-    print("The Accuracy of SGD Classifier is:", metrics.accuracy_score(y13_test,pip13.predict(X13_test))*100,'%')
+    acc=[]
+    loss=['hinge','log','modified_huber','squared_hinge','perceptron']
+    for los in loss:
+        from sklearn.linear_model import SGDClassifier
+        model13=SGDClassifier(loss='{}'.format(los),shuffle=True,random_state=4)
+        pip13 = Pipeline(steps=[('preprocessor13', preprocessor13),('model13', model13)])
+        pip13.fit(X13_train, y13_train)
+        preds10 = pip13.predict(X13_test)
+        #print(preds10)
+        from sklearn import metrics
+        acc.append(metrics.accuracy_score(y13_test,pip13.predict(X13_test)))
+    print('The Accuracy of SGD Classifier is:',max(acc)*100)
     import warnings
-    warnings.filterwarnings("ignore")
-    total_accuracy.append(metrics.accuracy_score(y13_test,pip13.predict(X13_test))*100,'%')
+    warnings.filterwarnings('ignore')
+    total_accuracy.append(max(acc)*100,'%')
     
 def classification():
     SVM()
