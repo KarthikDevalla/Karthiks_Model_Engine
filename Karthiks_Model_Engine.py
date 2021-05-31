@@ -556,10 +556,7 @@ def GradientBoostingRegressor():
     from sklearn.preprocessing import OneHotEncoder
     import pandas as pd
     import numpy as np
-    load_dataset=pd.read_excel('insurance.xlsx')
-    features=['age','bmi','smoker','children']
     X12=load_dataset[features]
-    dep=['charges']
     y12=load_dataset[dep]
     from sklearn.model_selection import train_test_split
     X12_train,X12_test,y12_train,y12_test=train_test_split(X12,y12,test_size=0.2,random_state=4)
