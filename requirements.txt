@@ -1,0 +1,9 @@
+pandas
+numpy
+scikit-learn
+scikit-optimize
+matplotlib
+xgboost
+h5py
+patool
+pyunpack
