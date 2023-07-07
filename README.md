@@ -1,4 +1,6 @@
 # Karthik's Model Engine
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+
 A Python package  is a small prototype in removing human interference in supervised learning (Automating supervised learning).
 
 ## Installation
