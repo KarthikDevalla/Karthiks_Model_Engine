@@ -1,11 +1,11 @@
-# fluid_domain.art import Kmodel_engine
+# fluid_domain.art import KMEngine
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 ---
-## class Kmodel_engine(data, column, test_ratio=0.2)
+## class KMEngine(data, column, test_ratio=0.2)
 ---
 
-Kmodel_engine (Karthik's Model Engine) is a versatile tool designed to streamline machine learning model training, evaluation, and customization. With support for both regression and classification tasks, Kmodel_engine offers an automated workflow that includes data preprocessing, feature selection, exploratory data analysis (EDA), model training, and metric evaluation. This class integrates an array of popular machine learning models from libraries like Scikit-Learn, XGBoost, and LightGBM. Additionally, it facilitates model parameter customization, empowering users to efficiently build, assess, and refine machine learning models tailored to their specific datasets and tasks. As of now this class cannot remove outliers, to remove them use [O_sieve](https://pypi.org/project/vcosmos/) or [IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html)
+KMEngine (Karthik's Model Engine) is a versatile tool designed to streamline machine learning model training, evaluation, and customization. With support for both regression and classification tasks, Kmodel_engine offers an automated workflow that includes data preprocessing, feature selection, exploratory data analysis (EDA), model training, and metric evaluation. This class integrates an array of popular machine learning models from libraries like Scikit-Learn, XGBoost, and LightGBM. Additionally, it facilitates model parameter customization, empowering users to efficiently build, assess, and refine machine learning models tailored to their specific datasets and tasks. As of now this class cannot remove outliers, to remove them use [O_sieve](https://pypi.org/project/vcosmos/) or [IsolationForest](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.IsolationForest.html)
 
 
 ---
