@@ -39,7 +39,7 @@ class KMEngine():
         self.task=''
         if np.issubdtype(self.y.dtype, np.number):
             unique_labels = np.unique(self.y)
-            if len(unique_labels) > 2:
+            if len(unique_labels) > 5:
                 self.task='Regression'
             else:
                 self.task='Classification'    
