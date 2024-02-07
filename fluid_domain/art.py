@@ -14,7 +14,7 @@ from sklearn.svm import SVR, SVC
 from sklearn.tree import DecisionTreeRegressor, DecisionTreeClassifier
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier, GradientBoostingRegressor, GradientBoostingClassifier, AdaBoostRegressor, AdaBoostClassifier, ExtraTreesRegressor, ExtraTreesClassifier
 from xgboost import XGBRegressor, XGBClassifier
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler, LabelEncoder
 from lightgbm import LGBMRegressor, LGBMClassifier
 from sklearn.neighbors import KNeighborsRegressor, KNeighborsClassifier
 from sklearn.neural_network import MLPRegressor, MLPClassifier
@@ -39,7 +39,7 @@ class KMEngine():
         self.task=''
         if np.issubdtype(self.y.dtype, np.number):
             unique_labels = np.unique(self.y)
-            if len(unique_labels) > 5:
+            if len(unique_labels) > 10:
                 self.task='Regression'
             else:
                 self.task='Classification'    
@@ -111,6 +111,8 @@ class KMEngine():
                 self.X=self.X.drop(columns=[key])
         
         if self.task=='Classification':
+            label_encoder = LabelEncoder()
+            self.y = label_encoder.fit_transform(self.y)
             numerical_transformer = Pipeline([('imputer',SimpleImputer(strategy='most_frequent')),('scaling',StandardScaler())])
 
         else:
@@ -147,11 +149,11 @@ class KMEngine():
         history=complete_pipe.fit(self.X_train, self.y_train)
         y_hat=complete_pipe.predict(self.X_test)
         accuracy=round(accuracy_score(self.y_test,y_hat),2)
-        f1=round(f1_score(self.y_test,y_hat),2)
-        precison=round(precision_score(self.y_test,y_hat),2)
-        recall=round(recall_score(self.y_test,y_hat),2)
+        f1=round(f1_score(self.y_test,y_hat,average='micro'),2)
+        precison=round(precision_score(self.y_test,y_hat,average='micro'),2)
+        recall=round(recall_score(self.y_test,y_hat, average='micro'),2)
         self.saved_class_models[model_name]= complete_pipe
-        return accuracy, f1, precison, recall, round(roc_auc_score(self.y_test,y_hat),2)
+        return accuracy, f1, precison, recall
 
     # Method that calls the supervised learning tasks.
     def super_learning(self):
@@ -172,7 +174,7 @@ class KMEngine():
                 table.add_row([model_name, f'{r2_score}', f'{adjusted_r2_score}', f'{mae}',f'{rmse}'])
 
         else:
-            table.field_names=['Model','Accuracy', 'F1-Score', 'Precision', 'Recall','ROC AUC']
+            table.field_names=['Model','Accuracy', 'F1-Score', 'Precision', 'Recall']
             print('Engine Encountered Discrete Data. Hence, proceeding with Classification')
             print(f'\nWriting models to respective keys: {list(self.classification_models.keys())}')
 
@@ -180,8 +182,8 @@ class KMEngine():
                 self.result[model_name]=self.classification_runner(model_name, model) #Running all the models with just the 'model' variable.
             
             
-            for model_name, (accuracy, f1, precision, recall, roc_auc) in self.result.items():
-                table.add_row([model_name, f'{accuracy}', f'{f1}', f'{precision}',f'{recall}',f'{roc_auc}'])
+            for model_name, (accuracy, f1, precision, recall) in self.result.items():
+                table.add_row([model_name, f'{accuracy}', f'{f1}', f'{precision}',f'{recall}'])
 
         return f'\nAll models evaluations:\n{table}\nTime Eaten :{time.time()-start} secs'
     
